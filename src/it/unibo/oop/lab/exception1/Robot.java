@@ -1,5 +1,4 @@
 package it.unibo.oop.lab.exception1;
-
 /**
  * Models a generic Robot.
  * 
