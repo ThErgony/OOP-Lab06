@@ -77,8 +77,10 @@ public final class BaseRobotTest {
         assertEquals(0d, r2.getBatteryLevel(), 0);
         // verify position: same as start position
         assertEquals("[CHECKING ROBOT INIT POS Y]", 0, r2.getEnvironment().getCurrPosY());
+        // recharge battery
+        r2.recharge();
         // out of world: returns false
-        assertFalse("[CHECKING MOVING UP]", r2.moveUp());
+        assertFalse("[CHECKING MOVING UP]", r2.moveDown());
         // recharge battery
         r2.recharge();
         // verify battery level
