@@ -1,4 +1,4 @@
-package it.unibo.oop.lab06.generics1;
+package it.unibo.oop.lab.generics1;
 
 /**
  *
