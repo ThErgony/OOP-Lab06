@@ -1,7 +1,11 @@
 package it.unibo.oop.lab.collections2;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -18,6 +22,7 @@ import java.util.List;
  */
 public class SocialNetworkUserImpl<U extends User> extends UserImpl implements SocialNetworkUser<U> {
 
+	private Map<String, Set<U>> groupCircle;
     /*
      * 
      * [FIELDS]
@@ -30,7 +35,10 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * think of what type of keys and values would best suit the requirements
      */
 
-    /*
+    public SocialNetworkUserImpl(final String name, final String surname, final String user) {
+		this(name, surname, user, -1);
+	}   
+	/*
      * [CONSTRUCTORS]
      * 
      * 1) Complete the definition of the constructor below, for building a user
@@ -56,6 +64,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
         super(name, surname, user, userAge);
+        this.groupCircle = new HashMap<>();
     }
 
     /*
@@ -66,7 +75,10 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
 
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        if (!groupCircle.containsKey(circle)) {
+			groupCircle.put(circle, null);
+		}
+    	return groupCircle.get(circle).add(user);
     }
 
     @Override
