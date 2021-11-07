@@ -61,30 +61,35 @@ public class StrictBankAccountImpl implements BankAccount {
      */
     public void depositFromATM(final int usrID, final double amount) {
         if (isAllowedATMTransaction()) {
-            this.deposit(usrID, amount - StrictBankAccountImpl.ATM_TRANSACTION_FEE);
+            this.deposit(usrID, amount);
             incATMTransactionCount();
-        }
+        } else {
+        	this.deposit(usrID, amount - StrictBankAccountImpl.ATM_TRANSACTION_FEE);
+        	incATMTransactionCount();
+            throw new TransactionsOverQuotaException();
+		}
     }
-
-	private void incATMTransactionCount() {
-		this.totalATMTransactionCount++;
-	}
 
     /**
      * 
      * {@inheritDoc}
      */
-    public void withdrawFromATM(final int usrID, final double amount) {
+    public void withdrawFromATM(final int usrID, final double amount) throws TransactionsOverQuotaException {
         if (isAllowedATMTransaction()) {
+            this.withdraw(usrID, amount);
+            incATMTransactionCount();
+        } else {
             this.withdraw(usrID, amount + StrictBankAccountImpl.ATM_TRANSACTION_FEE);
             incATMTransactionCount();
-        }
-    }
-
-	private boolean isAllowedATMTransaction() throws TransactionsOverQuotaException {
-		if (!(totalATMTransactionCount < maximumAllowedATMTransactions)) {
-			throw new TransactionsOverQuotaException();
+            throw new TransactionsOverQuotaException();
 		}
+    }
+    
+   	private void incATMTransactionCount() {
+		this.totalATMTransactionCount++;
+	}
+
+	private boolean isAllowedATMTransaction(){
 		return totalATMTransactionCount < maximumAllowedATMTransactions;
 	}
 
@@ -122,14 +127,14 @@ public class StrictBankAccountImpl implements BankAccount {
         if (this.usrID != id) {
 			throw new WrongAccountHolderException();
 		}
-    	return this.usrID == id;
+    	return true;
     }
 
     private boolean isWithdrawAllowed(final double amount) throws NotEnoughFoundsException {
         if (amount > balance) {
 			throw new NotEnoughFoundsException();
 		}
-    	return balance > amount;
+    	return true;
     }
 
     private void increaseTransactionsCount() {

@@ -40,15 +40,24 @@ public final class TestStrictBankAccount {
          */
     	
     	try {
-			for (int i = 0; i < N_MAX_ATM_TRANSACTIONS + 1; i++) {
+			for (int i = 0; i < N_MAX_ATM_TRANSACTIONS; i++) {
 				fontiR.withdrawFromATM(rFonti.getUserID(), 500);
 				System.out.println(fontiR.getTransactionCount() + " " + fontiR.getBalance());
 			}
 		} catch (TransactionsOverQuotaException e) {
 			System.out.println(rFonti.getName() + " " + rFonti.getSurname() + e);
 		}
-    	assertEquals("after 10 atm transaction 4990", 4990, fontiR.getBalance(), 0);
+    	
+    	assertEquals("after 10 atm transaction 5000", 5000, fontiR.getBalance(), 0);
     	assertEquals("expected 10", 10, fontiR.getTransactionCount());
+    	
+    	try {
+			fontiR.depositFromATM(rFonti.getUserID(), 500);
+		} catch (TransactionsOverQuotaException e) {
+			System.out.println(rFonti.getName() + " " + rFonti.getSurname() + e);
+		}	
+    	assertEquals("after 11 atm transaction", 5499, fontiR.getBalance(), 0);
+    	
     	fontiR.computeManagementFees(rFonti.getUserID());
     	assertEquals("now i've reset transaction count", 0, fontiR.getTransactionCount());
     	

@@ -14,7 +14,7 @@ public class TransactionsOverQuotaException extends IllegalStateException {
 
 	@Override
 	public String toString() {
-		return " have reach limit for ATM transactions.";
+		return " have finish free ATM transactions, now you pay fee every ATM transaction.";
 	}
 	
 	
