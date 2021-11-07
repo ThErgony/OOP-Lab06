@@ -15,6 +15,8 @@ public class StrictBankAccountImpl implements BankAccount {
     private static final double ATM_TRANSACTION_FEE = 1;
     private static final double MANAGEMENT_FEE = 5;
     private static final double TRANSACTION_FEE = 0.1;
+    
+    private int totalATMTransactionCount;
 
     /**
      * 
@@ -60,8 +62,13 @@ public class StrictBankAccountImpl implements BankAccount {
     public void depositFromATM(final int usrID, final double amount) {
         if (isAllowedATMTransaction()) {
             this.deposit(usrID, amount - StrictBankAccountImpl.ATM_TRANSACTION_FEE);
+            incATMTransactionCount();
         }
     }
+
+	private void incATMTransactionCount() {
+		this.totalATMTransactionCount++;
+	}
 
     /**
      * 
@@ -70,14 +77,15 @@ public class StrictBankAccountImpl implements BankAccount {
     public void withdrawFromATM(final int usrID, final double amount) {
         if (isAllowedATMTransaction()) {
             this.withdraw(usrID, amount + StrictBankAccountImpl.ATM_TRANSACTION_FEE);
+            incATMTransactionCount();
         }
     }
 
 	private boolean isAllowedATMTransaction() throws TransactionsOverQuotaException {
-		if (!(totalTransactionCount < maximumAllowedATMTransactions)) {
+		if (!(totalATMTransactionCount < maximumAllowedATMTransactions)) {
 			throw new TransactionsOverQuotaException();
 		}
-		return totalTransactionCount < maximumAllowedATMTransactions;
+		return totalATMTransactionCount < maximumAllowedATMTransactions;
 	}
 
     /**
@@ -105,7 +113,8 @@ public class StrictBankAccountImpl implements BankAccount {
         final double feeAmount = MANAGEMENT_FEE + (totalTransactionCount * StrictBankAccountImpl.TRANSACTION_FEE);
         if (checkUser(usrID) && isWithdrawAllowed(feeAmount)) {
             balance -= MANAGEMENT_FEE + totalTransactionCount * StrictBankAccountImpl.TRANSACTION_FEE;
-            totalTransactionCount = 0;
+            this.totalTransactionCount = 0;
+            this.totalATMTransactionCount = 0;
         }
     }
 
@@ -124,6 +133,6 @@ public class StrictBankAccountImpl implements BankAccount {
     }
 
     private void increaseTransactionsCount() {
-        totalTransactionCount++;
+        this.totalTransactionCount++;
     }
 }
