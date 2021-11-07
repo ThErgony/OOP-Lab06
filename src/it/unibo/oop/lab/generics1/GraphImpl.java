@@ -36,29 +36,32 @@ public class GraphImpl<N> implements Graph<N> {
 
 	@Override
 	public Set<N> linkedNodes(final N node) {
-//		Set<N> linkedNodes = new LinkedHashSet<>();
-//		if (this.graphMap.get(node) == null) {
-//			linkedNodes.clear();
-//		} else {
-//			linkedNodes.addAll(this.graphMap.get(node));
-//			for (N key : this.graphMap.keySet()) {
+		Set<N> linkedNodes = new LinkedHashSet<>();
+		if (this.graphMap.get(node) == null) {
+			linkedNodes.clear();
+		} else {
+			linkedNodes.addAll(this.graphMap.get(node));
+	/*
+	 * down code is for all linked nodes (from node and to node), up only from start node
+	 */
+//			for (final N key : this.graphMap.keySet()) {
 //				if (this.graphMap.get(key) != null) {
-//					for (N value : this.graphMap.get(key)) {
+//					for (final N value : this.graphMap.get(key)) {
 //						if (value == node) {
 //							linkedNodes.add(key);
 //						}
 //					}
 //				}
 //			}
-//		}
-//		return linkedNodes;
-		/*
-		 * up code is for all linked node (from node and to node), down only from node
-		 */
-		if (this.graphMap.get(node) == null) {
-			return new LinkedHashSet<>();
 		}
-		return new LinkedHashSet<>(this.graphMap.get(node));
+		return linkedNodes;
+	/*
+	 * alternative solution for get only nodes from start node
+	 */
+//		if (this.graphMap.get(node) == null) {
+//			return new LinkedHashSet<>();
+//		}
+//		return new LinkedHashSet<>(this.graphMap.get(node));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -86,7 +89,7 @@ public class GraphImpl<N> implements Graph<N> {
 			}
 		}
 		/*
-		 * get a list for dead path, path do not reach destination
+		 * get a list for dead node, path do not reach destination
 		 */
 		List<List<N>> deadNode = new LinkedList<>();
 		int i = 0;
@@ -99,7 +102,7 @@ public class GraphImpl<N> implements Graph<N> {
 //		System.out.println(deadNode);
 		edge.removeAll(deadNode);
 		/*
-		 * choose first min path
+		 * choose the first min path
 		 */
 		var minPath = new LinkedList<>();
 		for (final List<N> path : edge) {
