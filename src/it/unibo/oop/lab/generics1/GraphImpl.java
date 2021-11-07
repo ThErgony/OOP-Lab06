@@ -1,8 +1,5 @@
 package it.unibo.oop.lab.generics1;
-/**
- * @author Ergon
- *
- */
+
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -39,22 +36,29 @@ public class GraphImpl<N> implements Graph<N> {
 
 	@Override
 	public Set<N> linkedNodes(final N node) {
-		Set<N> linkedNodes = new LinkedHashSet<>();
+//		Set<N> linkedNodes = new LinkedHashSet<>();
+//		if (this.graphMap.get(node) == null) {
+//			linkedNodes.clear();
+//		} else {
+//			linkedNodes.addAll(this.graphMap.get(node));
+//			for (N key : this.graphMap.keySet()) {
+//				if (this.graphMap.get(key) != null) {
+//					for (N value : this.graphMap.get(key)) {
+//						if (value == node) {
+//							linkedNodes.add(key);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return linkedNodes;
+		/*
+		 * up code is for all linked node (from node and to node), down only from node
+		 */
 		if (this.graphMap.get(node) == null) {
-			linkedNodes.clear();
-		} else {
-			linkedNodes.addAll(this.graphMap.get(node));
-			for (N key : this.graphMap.keySet()) {
-				if (this.graphMap.get(key) != null) {
-					for (N value : this.graphMap.get(key)) {
-						if (value == node) {
-							linkedNodes.add(key);
-						}
-					}
-				}
-			}
+			return new LinkedHashSet<>();
 		}
-		return linkedNodes;
+		return new LinkedHashSet<>(this.graphMap.get(node));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -81,6 +85,9 @@ public class GraphImpl<N> implements Graph<N> {
 //				System.out.println("step "+ i + " " + edge + " " + edge.size() + " " + start);
 			}
 		}
+		/*
+		 * get a list for dead path, path do not reach destination
+		 */
 		List<List<N>> deadNode = new LinkedList<>();
 		int i = 0;
 		for (List<N> list : edge) {
@@ -91,6 +98,9 @@ public class GraphImpl<N> implements Graph<N> {
 		}
 //		System.out.println(deadNode);
 		edge.removeAll(deadNode);
+		/*
+		 * choose first min path
+		 */
 		var minPath = new LinkedList<>();
 		for (final List<N> path : edge) {
 			if (minPath.size() > path.size() || minPath.size() == 0) {
